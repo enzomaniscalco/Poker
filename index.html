@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+<title>Poker Feltguide</title>
+
+<!-- PWA / Home screen icon configuration -->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Poker" />
+<meta name="theme-color" content="#14181a" />
+
+<!-- Inline SVG icon embedded as data URI so the file is fully standalone -->
+<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%2314181a'/%3E%3Cg transform='translate(90 95) rotate(-15)'%3E%3Crect x='-32' y='-44' width='64' height='88' rx='6' fill='%231c2220' stroke='%237a8a6a' stroke-width='2'/%3E%3Ctext x='0' y='14' font-family='Georgia,serif' font-size='48' font-weight='700' text-anchor='middle' fill='%237a8a6a'%3EA%3C/text%3E%3C/g%3E%3Cg transform='translate(90 95) rotate(15) translate(20 0)'%3E%3Crect x='-32' y='-44' width='64' height='88' rx='6' fill='%2314181a' stroke='%237a8a6a' stroke-width='2'/%3E%3Ctext x='0' y='14' font-family='Georgia,serif' font-size='44' font-weight='700' text-anchor='middle' fill='%237a8a6a'%3E%E2%99%A0%3C/text%3E%3C/g%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%2314181a'/%3E%3Cg transform='translate(90 95) rotate(-15)'%3E%3Crect x='-32' y='-44' width='64' height='88' rx='6' fill='%231c2220' stroke='%237a8a6a' stroke-width='2'/%3E%3Ctext x='0' y='14' font-family='Georgia,serif' font-size='48' font-weight='700' text-anchor='middle' fill='%237a8a6a'%3EA%3C/text%3E%3C/g%3E%3Cg transform='translate(90 95) rotate(15) translate(20 0)'%3E%3Crect x='-32' y='-44' width='64' height='88' rx='6' fill='%2314181a' stroke='%237a8a6a' stroke-width='2'/%3E%3Ctext x='0' y='14' font-family='Georgia,serif' font-size='44' font-weight='700' text-anchor='middle' fill='%237a8a6a'%3E%E2%99%A0%3C/text%3E%3C/g%3E%3C/svg%3E" />
+
+<!-- Inline manifest as data URI for Android/Chrome PWA install -->
+<link rel="manifest" href='data:application/manifest+json,{"name":"Poker Feltguide","short_name":"Poker","start_url":".","display":"standalone","background_color":"%2314181a","theme_color":"%2314181a","icons":[{"src":"data:image/svg+xml;utf8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 512 512%27%3E%3Crect width=%27512%27 height=%27512%27 rx=%27115%27 fill=%27%2314181a%27/%3E%3Cg transform=%27translate(256 270) rotate(-15)%27%3E%3Crect x=%27-91%27 y=%27-125%27 width=%27182%27 height=%27250%27 rx=%2717%27 fill=%27%231c2220%27 stroke=%27%237a8a6a%27 stroke-width=%276%27/%3E%3Ctext x=%270%27 y=%2740%27 font-family=%27Georgia,serif%27 font-size=%27136%27 font-weight=%27700%27 text-anchor=%27middle%27 fill=%27%237a8a6a%27%3EA%3C/text%3E%3C/g%3E%3Cg transform=%27translate(256 270) rotate(15) translate(57 0)%27%3E%3Crect x=%27-91%27 y=%27-125%27 width=%27182%27 height=%27250%27 rx=%2717%27 fill=%27%2314181a%27 stroke=%27%237a8a6a%27 stroke-width=%276%27/%3E%3Ctext x=%270%27 y=%2740%27 font-family=%27Georgia,serif%27 font-size=%27125%27 font-weight=%27700%27 text-anchor=%27middle%27 fill=%27%237a8a6a%27%3E%E2%99%A0%3C/text%3E%3C/g%3E%3C/svg%3E","sizes":"512x512","type":"image/svg+xml"}]}' />
+
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0;
+    background: #14181a;
+    color: #d8dbcf;
+    font-family: Georgia, 'Times New Roman', serif;
+    overscroll-behavior: none;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  button { font-family: inherit; }
+  input { font-family: inherit; }
+  input:focus { outline: none; }
+  .container { max-width: 680px; margin: 0 auto; }
+  .header {
+    background: #1c2220;
+    border-bottom: 1px solid #2a3530;
+    padding: 24px 20px 18px;
+    text-align: center;
+  }
+  .header-suit { font-size: 24px; margin-bottom: 6px; color: #8a9080; }
+  .header h1 {
+    font-size: 24px; font-weight: 700;
+    margin: 0 0 4px; color: #7a8a6a; letter-spacing: 1px;
+  }
+  .header p { margin: 0; color: #8a9080; font-size: 13px; }
+  .tabs { background: #161b19; border-bottom: 1px solid #2a3530; }
+  .tab-row { display: flex; }
+  .tab-row + .tab-row { border-top: 1px solid #1f2622; }
+  .tab-btn {
+    flex: 1 1 0; padding: 11px 4px; border: none; cursor: pointer;
+    background: transparent; color: #8a9080;
+    border-bottom: 2px solid transparent;
+    font-size: 11px; font-weight: 600; white-space: nowrap;
+  }
+  .tab-btn.active { background: #1c2220; color: #7a8a6a; border-bottom-color: #7a8a6a; }
+  .content { padding: 16px; }
+  .lede { color: #8a9080; font-size: 13px; margin: 0 0 16px; line-height: 1.5; }
+
+  /* Position table */
+  .table-diagram {
+    background: radial-gradient(ellipse at center, #2a3530 0%, #1c2220 60%, #14181a 100%);
+    border: 2px solid #2a3530; border-radius: 50%;
+    width: min(280px, 90vw); height: min(180px, 58vw);
+    margin: 0 auto 20px; position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .table-label { color: #5a6258; font-size: 11px; letter-spacing: 2px; }
+  .seat {
+    position: absolute; transform: translate(-50%,-50%);
+    background: #14181a; border-radius: 50%;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700; cursor: pointer;
+  }
+
+  .row {
+    border-radius: 8px; padding: 12px 14px;
+    cursor: pointer; margin-bottom: 8px;
+  }
+  .row-head {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .row-name { font-weight: 700; font-size: 15px; min-width: 40px; }
+  .row-full { color: #8a9080; font-size: 12px; }
+  .dots { display: flex; gap: 3px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .row-detail {
+    margin-top: 10px; padding-top: 10px;
+    border-top: 1px solid #2a3530;
+  }
+  .row-detail p { margin: 0 0 6px; color: #d8dbcf; font-size: 13px; }
+  .row-detail span { color: #5a6258; font-size: 11px; }
+
+  /* Hand tiers */
+  .hand-card {
+    border-radius: 8px; padding: 12px 14px; margin-bottom: 8px;
+  }
+  .hand-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .hand-label { font-weight: 700; font-size: 14px; }
+  .hand-pos { font-size: 11px; opacity: 0.85; }
+  .hand-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+  .chip {
+    border-radius: 4px; padding: 2px 8px;
+    font-size: 12px; font-weight: 600;
+  }
+  .hand-tip { margin: 0; color: #8a9080; font-size: 12px; }
+
+  /* Bet sizing */
+  .street-card {
+    background: #161b19; border: 1px solid #2a3530;
+    border-radius: 8px; overflow: hidden; margin-bottom: 12px;
+  }
+  .street-head {
+    background: #1c2220; padding: 10px 14px;
+    border-bottom: 1px solid #2a3530;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .street-name { color: #7a8a6a; font-weight: 700; font-size: 14px; }
+  .rule {
+    padding: 10px; margin: 8px;
+    background: #14181a; border-radius: 6px; border: 1px solid #1f2622;
+  }
+  .rule-head {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 4px;
+  }
+  .rule-sit { color: #d8dbcf; font-size: 12px; flex: 1; padding-right: 8px; }
+  .rule-size {
+    color: #7a8a6a; font-weight: 700; font-size: 13px;
+    background: #222a25; padding: 2px 8px; border-radius: 4px; white-space: nowrap;
+  }
+  .rule-ex {
+    margin: 0; color: #5a6258; font-size: 11px; font-style: italic;
+  }
+
+  /* Tournament */
+  .phase-card {
+    background: #161b19; border: 1px solid #2a3530;
+    border-radius: 8px; padding: 14px; margin-bottom: 10px;
+  }
+  .phase-head {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+  }
+  .phase-name { color: #7a8a6a; font-weight: 700; font-size: 14px; }
+  .phase-tip {
+    display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px;
+  }
+  .phase-tip-bullet { color: #5a6850; font-size: 10px; margin-top: 2px; }
+  .phase-tip-text { color: #d8dbcf; font-size: 13px; line-height: 1.5; }
+
+  .warn-box {
+    margin-top: 12px; padding: 14px;
+    background: #1f180f; border: 1px solid #a06a3a55; border-radius: 8px;
+  }
+  .warn-head {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+  }
+  .warn-title { color: #c08a5a; font-weight: 700; font-size: 13px; }
+  .warn-body { margin: 0; color: #8a9080; font-size: 12px; line-height: 1.6; }
+
+  .info-box {
+    margin-top: 16px; padding: 12px;
+    background: #161b19; border: 1px solid #2a3530; border-radius: 8px;
+  }
+  .info-box p {
+    margin: 0; color: #8a9080; font-size: 12px; line-height: 1.7;
+  }
+  .info-box strong { color: #7a8a6a; }
+
+  /* Ordbok */
+  .search-wrap { position: relative; margin-bottom: 16px; }
+  .search-icon {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    font-size: 14px;
+  }
+  .search-input {
+    width: 100%; background: #161b19; border: 1px solid #2a3530;
+    border-radius: 8px; padding: 11px 12px 11px 36px;
+    color: #d8dbcf; font-size: 14px;
+  }
+  .ord-cat-head {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 8px; padding-bottom: 6px;
+    border-bottom: 1px solid #2a3530;
+  }
+  .ord-cat-name {
+    color: #7a8a6a; font-size: 12px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .ord-row {
+    background: #161b19; border: 1px solid #2a3530;
+    border-left: 3px solid #2a3530; border-radius: 6px;
+    padding: 10px 13px; cursor: pointer; margin-bottom: 5px;
+  }
+  .ord-row.open {
+    background: #1c2220; border-color: #5a6850;
+    border-left-color: #7a8a6a;
+  }
+  .ord-row-head {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .ord-term-wrap { display: flex; align-items: baseline; gap: 8px; }
+  .ord-term { color: #7a8a6a; font-weight: 700; font-size: 14px; }
+  .ord-full { color: #5a6258; font-size: 11px; font-style: italic; }
+  .ord-toggle { color: #5a6258; font-size: 14px; }
+  .ord-explain {
+    margin: 8px 0 0; color: #d8dbcf; font-size: 13px;
+    line-height: 1.6; border-top: 1px solid #2a3530; padding-top: 8px;
+  }
+  .ord-cat { margin-bottom: 18px; }
+
+  .footer { text-align: center; padding: 16px; color: #5a6258; font-size: 11px; }
+
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-suit">♠ ♥ ♦ ♣</div>
+  <h1>POKER FELTGUIDE</h1>
+  <p>7–9 spillere · Turneringsformat · Add-on etter 3t</p>
+</div>
+
+<div class="tabs">
+  <div class="tab-row">
+    <button class="tab-btn active" data-tab="posisjon">📍 Posisjon</button>
+    <button class="tab-btn" data-tab="hender">🃏 Starthand</button>
+    <button class="tab-btn" data-tab="bet">💰 Bet Size</button>
+  </div>
+  <div class="tab-row">
+    <button class="tab-btn" data-tab="turnering">🏆 Turnering</button>
+    <button class="tab-btn" data-tab="ordbok">📖 Ordbok</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="content" id="content"></div>
+</div>
+
+<div class="footer">♠ ♥ ♦ ♣ — God spilling</div>
+
+<script>
+const positions = [
+  { id: "utg", name: "UTG", full: "Under the Gun", seats: "Sete 1-2", desc: "Første til å handle. Spill kun premium hender.", strength: 1, color: "#8a4a3a" },
+  { id: "mp", name: "MP", full: "Middle Position", seats: "Sete 3-4", desc: "Noe mer fleksibelt, men vær forsiktig.", strength: 2, color: "#a06a3a" },
+  { id: "co", name: "CO", full: "Cut-Off", seats: "Sete 6-7", desc: "En av de beste posisjonene. Åpne bredt.", strength: 4, color: "#6b7d3e" },
+  { id: "btn", name: "BTN", full: "Button / Dealer", seats: "Sete 8", desc: "Beste posisjon. Spill nesten alle gode hender.", strength: 5, color: "#4a6b3a" },
+  { id: "sb", name: "SB", full: "Small Blind", seats: "Sete 9", desc: "Siste å handle pre-flop, første post-flop. Vanskelig.", strength: 2, color: "#a06a3a" },
+  { id: "bb", name: "BB", full: "Big Blind", seats: "Sete 10", desc: "Får odds til å kalle. Forsvar mot steals.", strength: 3, color: "#9a8438" },
+];
+
+const tableSeats = [
+  { label: "UTG", x: "18%", y: "50%", color: "#8a4a3a" },
+  { label: "MP",  x: "28%", y: "15%", color: "#a06a3a" },
+  { label: "CO",  x: "62%", y: "10%", color: "#6b7d3e" },
+  { label: "BTN", x: "85%", y: "40%", color: "#4a6b3a" },
+  { label: "SB",  x: "78%", y: "78%", color: "#a06a3a" },
+  { label: "BB",  x: "38%", y: "85%", color: "#9a8438" },
+];
+
+const handGroups = [
+  { label: "Premium",     color: "#4a6b3a", bg: "#1a2014", hands: ["AA","KK","QQ","JJ","AKs"], positions: ["UTG","MP","CO","BTN","SB","BB"], tip: "Alltid raise/re-raise" },
+  { label: "Sterke",      color: "#6b7d3e", bg: "#1a1f12", hands: ["TT","99","AQs","AKo","KQs"], positions: ["MP","CO","BTN","SB","BB"], tip: "Raise fra de fleste posisjoner" },
+  { label: "Middels",     color: "#9a8438", bg: "#1f1c10", hands: ["88","77","AJs","AQo","KJs","QJs"], positions: ["CO","BTN","BB"], tip: "Spill fra sen posisjon" },
+  { label: "Marginal",    color: "#a06a3a", bg: "#1f180f", hands: ["66","55","A9s-ATs","KTs","QTs","JTs"], positions: ["CO","BTN"], tip: "Kun fra CO/BTN med færre spillere" },
+  { label: "Fold ellers", color: "#8a4a3a", bg: "#1f120e", hands: ["44-22","A2s-A8s","K9s","offsuit connectors"], positions: ["BTN"], tip: "Svært selektiv, fold mot raises" },
+];
+
+const betSizing = [
+  { street: "Pre-Flop", icon: "🃏", rules: [
+    { situation: "Åpne raise (ingen raise foran)", size: "2.5–3x BB", example: "BB=100 → raise til 250-300" },
+    { situation: "3-bet (re-raise mot en raiser)", size: "3x motstanders raise", example: "Raise 300 → 3-bet til 900" },
+    { situation: "Kalle en raise (cold call)", size: "—", example: "Vurder å heller 3-bette eller folde" },
+  ]},
+  { street: "Flop", icon: "🔴", rules: [
+    { situation: "C-bet – sterk hånd", size: "50–75% av pot", example: "Pot 600 → bet 300-450" },
+    { situation: "C-bet – bluff på tørt board", size: "25–33% av pot", example: "Pot 600 → bet 150-200" },
+    { situation: "Check/kalle (drawing hand)", size: "—", example: "Ta gratis kort eller kall rimelig bet" },
+  ]},
+  { street: "Turn", icon: "🟡", rules: [
+    { situation: "Value bet – fortsatt sterk hånd", size: "60–75% av pot", example: "Pot 1200 → bet 720-900" },
+    { situation: "Bluff – etter check-check på flop", size: "50–60% av pot", example: "Pot 600 → bet 300-360" },
+    { situation: "Check bak (pot control)", size: "—", example: "Med middels hånd, bygg ikke pot" },
+  ]},
+  { street: "River", icon: "🔵", rules: [
+    { situation: "Value bet – beste hånd", size: "66–100% av pot", example: "Pot 2000 → bet 1300-2000" },
+    { situation: "Bluff – representerer sterk hånd", size: "75%+ av pot", example: "Troverdig – matcher board" },
+    { situation: "Check – middelmådig showdown-hånd", size: "—", example: "Ikke gi bluff-mulighet, ikke bygg pot" },
+  ]},
+];
+
+const tournamentTips = [
+  { phase: "Tidlig (Stack > 50BB)", icon: "🏔️", tips: ["Vær tålmodig – spill premium hender", "Unngå store potter uten sterke hender", "Bygg stack forsiktig, unngå eliminate"] },
+  { phase: "Mid (20–50BB)", icon: "⚖️", tips: ["Begynn å steal blinds fra CO/BTN", "3-bet lighter mot løse spillere", "Vurder add-on-status"] },
+  { phase: "Add-on fase (3t mark)", icon: "💰", tips: ["Ta add-on uansett stackstørrelse", "Add-on er nesten alltid +EV", "Reset og spill som om ny start"] },
+  { phase: "Sen / Short Stack (<20BB)", icon: "🚀", tips: ["Push/fold strategi – ikke min-raise", "Shove med ATC fra BTN om foldet til deg", "10-15BB: Shove alle par og Ax"] },
+];
+
+const ordbok = [
+  { kategori: "Posisjoner", emoji: "📍", ord: [
+    { term: "UTG", full: "Under the Gun", forklaring: "Første spiller til å handle etter blinds. Dårligste posisjon fordi du vet minst om de andres hender." },
+    { term: "MP", full: "Middle Position", forklaring: "Midtposisjon. Noe bedre enn UTG, men fremdeles tidlig." },
+    { term: "CO", full: "Cut-Off", forklaring: "En plass til høyre for dealer. En av de beste posisjonene ved bordet." },
+    { term: "BTN", full: "Button / Dealer", forklaring: "Dealer-knappen. Beste posisjon – handler sist etter flop, turn og river." },
+    { term: "SB", full: "Small Blind", forklaring: "Tvinges til å betale halv blind. Handler sist pre-flop, men først post-flop. Vanskelig posisjon." },
+    { term: "BB", full: "Big Blind", forklaring: "Tvinges til å betale hel blind. Har allerede betalt, så får rabatt på å kalle raises." },
+  ]},
+  { kategori: "Betting og handlinger", emoji: "💰", ord: [
+    { term: "Raise", full: "", forklaring: "Øke innsatsen utover hva som er satt. Sender signal om sterk hånd, men kan også brukes som bluff." },
+    { term: "3-bet", full: "Re-raise", forklaring: "Å raise en som allerede har raiset. Veldig aggressivt signal." },
+    { term: "Cold call", full: "", forklaring: "Å kalle en raise uten å ha betalt noe fra før. Unngå med marginale hender – heller 3-bet eller fold." },
+    { term: "C-bet", full: "Continuation Bet", forklaring: "Å bette på flop etter å ha raiset pre-flop, uavhengig av om du traff." },
+    { term: "Check", full: "", forklaring: "Ikke bette, men fortsatt være med. Kun mulig om ingen har bettet foran deg." },
+    { term: "Check-raise", full: "", forklaring: "Sjekke først, så raise når noen better. Signaliserer veldig god hånd – eller bluff." },
+    { term: "Fold", full: "", forklaring: "Legge ned kortene og gi opp runden. Koster deg ingenting mer." },
+    { term: "Shove", full: "All-in", forklaring: "Skyve alle chipsa inn. Brukes med short stack eller som pressmiddel." },
+    { term: "Steal", full: "Blind steal", forklaring: "Raise fra CO/BTN med mål om å vinne blinds uten motstand." },
+    { term: "Defend", full: "Forsvar blinds", forklaring: "Kalle eller 3-bette en steal-raise fra BB/SB fordi du har god odds." },
+  ]},
+  { kategori: "Streets (runder)", emoji: "🃏", ord: [
+    { term: "Pre-flop", full: "", forklaring: "Fasen før felleskorta legges ut. Du ser bare dine to hulkort." },
+    { term: "Flop", full: "", forklaring: "De tre første felleskorta. Nå vet du mye mer om håndens potensial." },
+    { term: "Turn", full: "Fourth Street", forklaring: "Det fjerde felleskortet. Potten er som regel større her – vær forsiktig." },
+    { term: "River", full: "Fifth Street", forklaring: "Det siste felleskortet. Siste sjanse til å bette eller bluffe." },
+    { term: "Showdown", full: "", forklaring: "Etter river vises kortene. Den beste hånden vinner potten." },
+  ]},
+  { kategori: "Korttyper", emoji: "♠", ord: [
+    { term: "Hulkort", full: "Hole cards", forklaring: "Dine to egne kort som bare du ser." },
+    { term: "Suited (s)", full: "", forklaring: "Begge hulkortene har samme farge. Gir mulighet for flush." },
+    { term: "Offsuit (o)", full: "", forklaring: "Hulkortene har ulik farge. Svakere enn suited-varianten." },
+    { term: "Connector", full: "", forklaring: "To kort i rekkefølge (f.eks. 8-9). Gir mulighet for straight." },
+    { term: "Pocket pair", full: "", forklaring: "To like hulkort (f.eks. KK eller 77). Verdsettes høyt pre-flop." },
+    { term: "Premium hand", full: "", forklaring: "De sterkeste starthandene: AA, KK, QQ, JJ, AKs. Alltid raise." },
+  ]},
+  { kategori: "Odds og stack", emoji: "📊", ord: [
+    { term: "Pot", full: "Potten", forklaring: "Total sum av chips i midten av bordet." },
+    { term: "Stack", full: "", forklaring: "Mengden chips du har foran deg." },
+    { term: "Short stack", full: "", forklaring: "Liten stack – typisk under 20BB. Krever push/fold-strategi." },
+    { term: "EV", full: "Expected Value", forklaring: "Forventet verdi over tid. +EV = lønnsomt. -EV = taper penger på sikt." },
+    { term: "Pot odds", full: "", forklaring: "Forholdet mellom hva du må kalle og pottens størrelse. Hjelper deg avgjøre om et kall er lønnsomt." },
+    { term: "Add-on", full: "", forklaring: "Mulighet til å kjøpe ekstra chips på bestemt tidspunkt. Nesten alltid lønnsomt." },
+  ]},
+  { kategori: "Strategi", emoji: "🧠", ord: [
+    { term: "Value bet", full: "", forklaring: "Bette med sterk hånd for å få motstanderen til å betale mer." },
+    { term: "Bluff", full: "", forklaring: "Bette uten god hånd, med håp om at motstanderen folder." },
+    { term: "Pot control", full: "", forklaring: "Holde potten liten med en middelmådig hånd." },
+    { term: "Tilt", full: "", forklaring: "Emosjonell tilstand der du spiller dårlig pga. frustrasjon. Farligste tilstanden." },
+    { term: "Push/fold", full: "", forklaring: "Short stack-strategi: enten shove all-in eller fold. Ingen min-raises." },
+    { term: "Board", full: "Felleskorta", forklaring: "Alle felleskorta (flop + turn + river) som alle ser." },
+    { term: "Dry board", full: "", forklaring: "Board uten muligheter for straight/flush. Enklere å c-bette." },
+    { term: "Wet board", full: "", forklaring: "Board med mange draw-muligheter. Vær forsiktig." },
+    { term: "Draw", full: "Drawing hand", forklaring: "Hånd som trenger ett kort til for å bli sterk – f.eks. flush draw." },
+    { term: "ATC", full: "Any Two Cards", forklaring: "Kan shove med hvilke som helst kort – brukes i push/fold med kort stack og sen posisjon." },
+  ]},
+];
+
+// State
+const state = {
+  tab: "posisjon",
+  activePos: null,
+  search: "",
+  openTerm: null,
+};
+
+const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+
+function renderPosisjon() {
+  const tableHtml = `
+    <div class="table-diagram">
+      <span class="table-label">BORDET</span>
+      ${tableSeats.map(s => `
+        <div class="seat" data-seat="${s.label}" style="left:${s.x};top:${s.y};border:2px solid ${s.color};color:${s.color};">${s.label}</div>
+      `).join("")}
+    </div>
+  `;
+
+  const rows = positions.map(p => {
+    const isActive = state.activePos === p.name;
+    const dots = [1,2,3,4,5].map(i =>
+      `<div class="dot" style="background:${i <= p.strength ? p.color : '#2a3530'};"></div>`
+    ).join("");
+    return `
+      <div class="row" data-pos="${p.name}" style="background:${isActive ? '#1c2220' : '#161b19'};border:1px solid ${isActive ? p.color : '#2a3530'};border-left:4px solid ${p.color};">
+        <div class="row-head">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="row-name" style="color:${p.color};">${p.name}</span>
+            <span class="row-full">${p.full}</span>
+          </div>
+          <div class="dots">${dots}</div>
+        </div>
+        ${isActive ? `
+          <div class="row-detail">
+            <p>${escapeHtml(p.desc)}</p>
+            <span>📍 ${p.seats}</span>
+          </div>
+        ` : ""}
+      </div>
+    `;
+  }).join("");
+
+  return `
+    <p class="lede">Posisjon er én av de viktigste faktorene. Jo senere du sitter, jo mer info har du.</p>
+    ${tableHtml}
+    <div>${rows}</div>
+    <div class="info-box">
+      <p>💡 <strong>Huskeregel:</strong> Sen posisjon = mer info = mer makt. Fold mer fra UTG, åpne bredt fra BTN.</p>
+    </div>
+  `;
+}
+
+function renderHender() {
+  const cards = handGroups.map(g => `
+    <div class="hand-card" style="background:${g.bg};border:1px solid ${g.color}33;border-left:4px solid ${g.color};">
+      <div class="hand-head">
+        <span class="hand-label" style="color:${g.color};">${g.label}</span>
+        <span class="hand-pos" style="color:${g.color};">Fra: ${g.positions.join(", ")}</span>
+      </div>
+      <div class="hand-chips">
+        ${g.hands.map(h => `<span class="chip" style="background:${g.color}22;border:1px solid ${g.color}44;color:${g.color};">${h}</span>`).join("")}
+      </div>
+      <p class="hand-tip">→ ${escapeHtml(g.tip)}</p>
+    </div>
+  `).join("");
+
+  return `
+    <p class="lede">Spill færre, sterkere hender. Det viktigste er å folde mer pre-flop.</p>
+    <div>${cards}</div>
+    <div class="info-box">
+      <p>💡 <strong>s = suited (samme farge) · o = offsuit (ulik farge)</strong></p>
+    </div>
+  `;
+}
+
+function renderBet() {
+  const streets = betSizing.map(s => `
+    <div class="street-card">
+      <div class="street-head">
+        <span style="font-size:16px;">${s.icon}</span>
+        <span class="street-name">${s.street}</span>
+      </div>
+      <div>
+        ${s.rules.map(r => `
+          <div class="rule">
+            <div class="rule-head">
+              <span class="rule-sit">${escapeHtml(r.situation)}</span>
+              <span class="rule-size">${escapeHtml(r.size)}</span>
+            </div>
+            <p class="rule-ex">ex: ${escapeHtml(r.example)}</p>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `).join("");
+
+  return `
+    <p class="lede">Konsistente bet sizes skjuler hva du har. Ikke bet stort bare med sterke hender!</p>
+    <div>${streets}</div>
+    <div class="info-box">
+      <p>💡 <strong>Gyllen regel:</strong> Bet det samme uavhengig av om du bluffer eller har sterk hånd.</p>
+    </div>
+  `;
+}
+
+function renderTurnering() {
+  const phases = tournamentTips.map(p => `
+    <div class="phase-card">
+      <div class="phase-head">
+        <span style="font-size:18px;">${p.icon}</span>
+        <span class="phase-name">${p.phase}</span>
+      </div>
+      ${p.tips.map(t => `
+        <div class="phase-tip">
+          <span class="phase-tip-bullet">▶</span>
+          <span class="phase-tip-text">${escapeHtml(t)}</span>
+        </div>
+      `).join("")}
+    </div>
+  `).join("");
+
+  return `
+    <p class="lede">Tilpass strategien etter fase og stack. Add-on etter 3t – ta det alltid.</p>
+    <div>${phases}</div>
+    <div class="warn-box">
+      <div class="warn-head">
+        <span>⚠️</span>
+        <span class="warn-title">Smertegrense: 2 buy-ins</span>
+      </div>
+      <p class="warn-body">Bestem deg <strong style="color:#c08a5a;">før</strong> du setter deg ned. Emosjonell tilt er pokerspillerens fiende nummer én.</p>
+    </div>
+    <div class="info-box">
+      <p>💡 <strong>Rask husker:</strong><br>
+      · Fold er gratis. Kalle er dyrt.<br>
+      · Sen posisjon = raise. Tidlig = vær forsiktig.<br>
+      · Ikke show bluffer. Bet for value eller fold.</p>
+    </div>
+  `;
+}
+
+function renderOrdbok() {
+  const q = state.search.toLowerCase().trim();
+  const filtered = q.length < 2
+    ? ordbok
+    : ordbok
+        .map(k => ({ ...k, ord: k.ord.filter(o =>
+          o.term.toLowerCase().includes(q) ||
+          o.full.toLowerCase().includes(q) ||
+          o.forklaring.toLowerCase().includes(q)
+        )}))
+        .filter(k => k.ord.length > 0);
+
+  const empty = filtered.length === 0
+    ? `<div style="text-align:center;padding:40px 20px;color:#5a6258;">
+         <div style="font-size:32px;margin-bottom:12px;">🃏</div>
+         <p style="margin:0;font-style:italic;">Ingen treff for "${escapeHtml(state.search)}"</p>
+       </div>`
+    : "";
+
+  const cats = filtered.map((kategori, ki) => `
+    <div class="ord-cat">
+      <div class="ord-cat-head">
+        <span>${kategori.emoji}</span>
+        <span class="ord-cat-name">${escapeHtml(kategori.kategori)}</span>
+      </div>
+      <div>
+        ${kategori.ord.map((o, oi) => {
+          const key = `${ki}-${oi}`;
+          const isOpen = state.openTerm === key;
+          return `
+            <div class="ord-row ${isOpen ? "open" : ""}" data-term="${key}">
+              <div class="ord-row-head">
+                <div class="ord-term-wrap">
+                  <span class="ord-term">${escapeHtml(o.term)}</span>
+                  ${o.full ? `<span class="ord-full">${escapeHtml(o.full)}</span>` : ""}
+                </div>
+                <span class="ord-toggle">${isOpen ? "▴" : "▾"}</span>
+              </div>
+              ${isOpen ? `<p class="ord-explain">${escapeHtml(o.forklaring)}</p>` : ""}
+            </div>
+          `;
+        }).join("")}
+      </div>
+    </div>
+  `).join("");
+
+  return `
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="search-input" type="text" placeholder="Søk etter uttrykk..." value="${escapeHtml(state.search)}" />
+    </div>
+    ${empty}
+    ${cats}
+  `;
+}
+
+function render() {
+  // Update tab buttons
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.tab === state.tab);
+  });
+
+  // Render content
+  const content = document.getElementById("content");
+  let html = "";
+  if (state.tab === "posisjon") html = renderPosisjon();
+  else if (state.tab === "hender") html = renderHender();
+  else if (state.tab === "bet") html = renderBet();
+  else if (state.tab === "turnering") html = renderTurnering();
+  else if (state.tab === "ordbok") html = renderOrdbok();
+  content.innerHTML = html;
+
+  // Re-attach handlers
+  attachContentHandlers();
+}
+
+function attachContentHandlers() {
+  // Position rows + table seats
+  document.querySelectorAll("[data-pos]").forEach(el => {
+    el.addEventListener("click", () => {
+      state.activePos = state.activePos === el.dataset.pos ? null : el.dataset.pos;
+      render();
+    });
+  });
+  document.querySelectorAll("[data-seat]").forEach(el => {
+    el.addEventListener("click", () => {
+      state.activePos = state.activePos === el.dataset.seat ? null : el.dataset.seat;
+      render();
+    });
+  });
+
+  // Ordbok rows
+  document.querySelectorAll("[data-term]").forEach(el => {
+    el.addEventListener("click", (e) => {
+      // Don't toggle if clicking the search input
+      if (e.target.tagName === "INPUT") return;
+      state.openTerm = state.openTerm === el.dataset.term ? null : el.dataset.term;
+      render();
+    });
+  });
+
+  // Search input – preserve focus and cursor
+  const input = document.getElementById("search-input");
+  if (input) {
+    input.addEventListener("input", (e) => {
+      state.search = e.target.value;
+      state.openTerm = null;
+      // Re-render but keep input focused
+      render();
+      const newInput = document.getElementById("search-input");
+      if (newInput) {
+        newInput.focus();
+        const len = newInput.value.length;
+        newInput.setSelectionRange(len, len);
+      }
+    });
+  }
+}
+
+// Tab switching
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    state.tab = btn.dataset.tab;
+    render();
+  });
+});
+
+// Initial render
+render();
+</script>
+</body>
+</html>
